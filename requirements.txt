@@ -1,0 +1,43 @@
+# FRA RAG System Dependencies
+# Python 3.10+
+
+# Web Scraping
+firecrawl-py>=0.0.16
+scrapy>=2.11.0
+requests>=2.31.0
+
+# Document Processing
+PyMuPDF>=1.23.0
+python-docx>=1.0.0
+# paddleocr>=2.7.0  # Uncomment for OCR support (requires paddlepaddle)
+
+# Text Processing
+langchain>=0.1.0
+langchain-text-splitters>=0.0.1
+
+# Embeddings & Vector Store
+qdrant-client>=1.7.0
+sentence-transformers>=2.2.2
+torch>=2.0.0
+
+# Arabic NLP
+pyarabic>=0.6.15
+arabic-reshaper>=3.0.0
+python-bidi>=0.6.0
+
+# Environment & Config
+python-dotenv>=1.0.0
+
+# Utilities
+tqdm>=4.66.0
+loguru>=0.7.2
+
+# Web UI
+gradio>=4.0.0
+
+# Hybrid Search & Reranking
+rank-bm25>=0.2.2
+sentence-transformers>=2.2.0
+
+# Caching
+diskcache>=5.6.0
