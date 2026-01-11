@@ -1,20 +1,3 @@
-"""
-FRA RAG System - Enhanced Web UI
-
-A Gradio-based web interface for the FRA Regulatory RAG system.
-Features:
-- Arabic RTL display with proper formatting
-- Cited answers with regulation names, article numbers, and exact quotes
-- Show Evidence expandable feature
-- Anti-hallucination with explicit "not found" responses
-- Multi-document reasoning
-- Document filtering by type
-- Bilingual support (Arabic/English)
-
-Usage:
-    python app.py
-"""
-
 import gradio as gr
 import sys
 from pathlib import Path
