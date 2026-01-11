@@ -31,9 +31,13 @@ wheels/
 data/raw_pdfs/*.pdf
 data/processed/*
 data/chroma_db/
+data/qdrant_db/
+data/cache/
 data/sample_docs/*.pdf
 data/sample_docs/*.txt
 data/sample_docs/*.md
+data/sample_docs/*.docx
+data/feedback.json
 !data/sample_docs/.gitkeep
 !data/raw_pdfs/.gitkeep
 !data/processed/.gitkeep
