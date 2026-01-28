@@ -94,34 +94,81 @@ class ResponseCache:
 
 
 class BM25Index:
-    """BM25 index for keyword-based retrieval."""
+    """BM25 index for keyword-based retrieval with Arabic support."""
     
-    def __init__(self):
+    def __init__(self, use_stemming: bool = True):
         self.documents: List[Dict[str, Any]] = []
         self.tokenized_docs: List[List[str]] = []
         self.bm25: Optional[BM25Okapi] = None
         self._is_built = False
+        self.use_stemming = use_stemming
+        self._stemmer = None
+        
+        # Initialize Arabic stemmer
+        if use_stemming:
+            try:
+                from nltk.stem.isri import ISRIStemmer
+                self._stemmer = ISRIStemmer()
+                logger.info("ISRIStemmer initialized for Arabic BM25")
+            except ImportError:
+                logger.warning("NLTK ISRIStemmer not available, using basic tokenization")
     
     def add_documents(self, documents: List[Dict[str, Any]]):
         """Add documents to the index."""
         for doc in documents:
             content = doc.get("content", doc.get("text", ""))
             self.documents.append(doc)
-            # Simple tokenization for Arabic/English
+            # Arabic-aware tokenization with stemming
             tokens = self._tokenize(content)
             self.tokenized_docs.append(tokens)
         
         self._is_built = False
     
-    def _tokenize(self, text: str) -> List[str]:
-        """Tokenize text for BM25."""
-        # Simple whitespace tokenization + basic normalization
+    def _normalize_arabic(self, text: str) -> str:
+        """Normalize Arabic text for better matching."""
         import re
-        # Remove punctuation and normalize
+        # Alef variants → Alef
+        text = re.sub('[إأآا]', 'ا', text)
+        # Yeh variants
+        text = re.sub('ى', 'ي', text)
+        # Remove diacritics (tashkeel)
+        text = re.sub(r'[\u064B-\u065F\u0670]', '', text)
+        # Remove tatweel
+        text = re.sub('ـ', '', text)
+        return text
+    
+    def _tokenize(self, text: str) -> List[str]:
+        """Tokenize text for BM25 with Arabic normalization and stemming."""
+        import re
+        
+        # Step 1: Normalize Arabic
+        text = self._normalize_arabic(text)
+        
+        # Step 2: Remove punctuation
         text = re.sub(r'[^\w\s]', ' ', text)
+        
+        # Step 3: Tokenize
         tokens = text.lower().split()
-        # Filter very short tokens
-        return [t for t in tokens if len(t) > 1]
+        
+        # Step 4: Filter short tokens
+        tokens = [t for t in tokens if len(t) > 1]
+        
+        # Step 5: Apply Arabic stemming if available
+        if self._stemmer and self.use_stemming:
+            stemmed_tokens = []
+            for token in tokens:
+                try:
+                    # ISRIStemmer works on Arabic words
+                    if re.search(r'[\u0600-\u06FF]', token):
+                        stemmed = self._stemmer.stem(token)
+                        stemmed_tokens.append(stemmed if stemmed else token)
+                    else:
+                        stemmed_tokens.append(token)
+                except Exception:
+                    stemmed_tokens.append(token)
+            return stemmed_tokens
+        
+        return tokens
     
     def build(self):
         """Build the BM25 index."""
@@ -236,11 +283,11 @@ class Reranker:
 
 class HybridRetriever:
     """
-    Hybrid retriever combining vector search and BM25.
+    Hybrid retriever combining vector search and BM25/sparse vectors.
     
     Features:
     - Vector similarity search (semantic)
-    - BM25 keyword search (lexical)
+    - BM25 keyword search OR BGE-M3 sparse vectors (lexical)
     - Score fusion (RRF - Reciprocal Rank Fusion)
     - Cross-encoder reranking
     - Response caching
@@ -253,6 +300,7 @@ class HybridRetriever:
         use_cache: bool = True,
         vector_weight: float = 0.6,
         bm25_weight: float = 0.4,
+        use_bge_sparse: bool = False,
     ):
         """
         Initialize hybrid retriever.
@@ -263,6 +311,7 @@ class HybridRetriever:
             use_cache: Whether to cache results
             vector_weight: Weight for vector search scores (0-1)
             bm25_weight: Weight for BM25 scores (0-1)
+            use_bge_sparse: Use BGE-M3 sparse vectors instead of BM25
         """
         self.vector_store = vector_store
         self.bm25_index = BM25Index()
@@ -271,10 +320,27 @@ class HybridRetriever:
         
         self.vector_weight = vector_weight
         self.bm25_weight = bm25_weight
+        self.use_bge_sparse = use_bge_sparse
+        
+        # Initialize BGE-M3 sparse embedder if enabled
+        self._bge_embedder = None
+        self._doc_sparse_vectors = {}
+        if use_bge_sparse:
+            try:
+                from rag_engine.bge_m3_embeddings import get_bge_m3_embedder
+                self._bge_embedder = get_bge_m3_embedder()
+                if self._bge_embedder.has_sparse:
+                    logger.info("BGE-M3 sparse vectors enabled for hybrid retrieval")
+                else:
+                    logger.warning("BGE-M3 sparse not available, falling back to BM25")
+                    self.use_bge_sparse = False
+            except Exception as e:
+                logger.warning(f"Failed to init BGE-M3 sparse: {e}, using BM25")
+                self.use_bge_sparse = False
         
         self._bm25_synced = False
         
-        logger.info(f"HybridRetriever initialized (reranker={use_reranker}, cache={use_cache})")
+        logger.info(f"HybridRetriever initialized (reranker={use_reranker}, cache={use_cache}, bge_sparse={self.use_bge_sparse})")
     
     def sync_bm25_index(self):
         """Sync BM25 index with vector store documents."""

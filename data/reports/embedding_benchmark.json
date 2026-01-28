@@ -1,0 +1,23 @@
+[
+  {
+    "model": "bge-m3",
+    "hit_rate": 1.0,
+    "mrr": 1.0,
+    "latency_ms": 111.31067276000977,
+    "dimensions": 1024
+  },
+  {
+    "model": "arabert",
+    "hit_rate": 1.0,
+    "mrr": 1.0,
+    "latency_ms": 32.91196823120117,
+    "dimensions": 768
+  },
+  {
+    "model": "camelbert",
+    "hit_rate": 0.4,
+    "mrr": 0.6066666666666667,
+    "latency_ms": 43.03860664367676,
+    "dimensions": 768
+  }
+]

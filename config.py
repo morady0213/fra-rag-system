@@ -73,7 +73,7 @@ ARABIC_SEPARATORS = [
 # ============================================================================
 # RETRIEVAL CONFIGURATION
 # ============================================================================
-DEFAULT_TOP_K = 5  # Number of documents to retrieve
+DEFAULT_TOP_K = 3  # Number of documents to retrieve (reduced for better grounding)
 
 # ============================================================================
 # LOGGING

@@ -56,119 +56,40 @@ class GrokClient:
     
     # System prompt for Arabic regulatory RAG
     # Instructs the model to answer ONLY based on provided context with proper citations
-    SYSTEM_PROMPT_AR = """أنت مساعد قانوني ذكي متخصص في الإجابة على الأسئلة المتعلقة بلوائح وقرارات الهيئة العامة للرقابة المالية في مصر (FRA).
+    SYSTEM_PROMPT_AR = """<role>محلل قانوني للهيئة العامة للرقابة المالية المصرية</role>
 
-## قواعد صارمة للإجابة:
+<constraints>
+1. أجب فقط من السياق المقدم - ممنوع استخدام معرفة خارجية
+2. إذا لم تجد الإجابة في السياق، قل: "NO_CONTEXT"
+3. ممنوع: "عادةً"، "غالباً"، "من المتوقع"، أي تفسير أو استنتاج
+4. لكل معلومة: اذكر المصدر (المادة/القرار)
+</constraints>
 
-### 1. الاستناد للمصادر فقط (إلزامي):
-- أجب **فقط** بناءً على المعلومات الموجودة في السياق المقدم
-- **لا تختلق** أو تفترض أي معلومات غير موجودة صراحةً في النصوص
+<format>
+[الإجابة المباشرة]
+[المصدر: اسم المستند - المادة X]
+</format>"""
 
-### 2. الاستشهاد الدقيق (إلزامي):
-عند ذكر أي معلومة، يجب تضمين:
-- **اسم اللائحة/القرار** (إن وُجد)
-- **رقم المادة** (مثل: المادة 5، البند ثانياً)
-- **اقتباس نصي مباشر** بين علامتي تنصيص «...»
+    SYSTEM_PROMPT_EN = """<role>Legal analyst for Egyptian Financial Regulatory Authority (FRA)</role>
 
-### 3. التعامل مع عدم توفر المعلومات (إلزامي):
-إذا لم تجد إجابة صريحة في السياق:
-- قل بوضوح: "**لا يوجد نص صريح في المستندات المتاحة** يجيب على هذا السؤال مباشرة."
-- إن وُجدت مواد ذات صلة، اذكرها مع التوضيح: "ومع ذلك، قد تكون المواد التالية ذات صلة: ..."
-- **لا تقدم استنتاجات غير مدعومة بنص صريح**
+<constraints>
+1. Answer ONLY from provided context - external knowledge forbidden
+2. If answer not in context, respond: "NO_CONTEXT"
+3. Forbidden: "usually", "typically", "expected", any interpretation
+4. For every fact: cite source (Article/Decision)
+</constraints>
 
-### 4. الاستدلال متعدد المصادر:
-- إذا كانت الإجابة تتطلب معلومات من عدة مستندات، اجمعها مع ذكر مصدر كل جزء
-- وضّح العلاقة بين المصادر المختلفة عند الحاجة
-
-### 5. تنسيق الإجابة (مهم جداً):
-- استخدم اللغة العربية الفصحى
-- **نظّم الإجابة بشكل واضح ومقروء:**
-  - استخدم **الترقيم** (1. 2. 3.) عند سرد خطوات أو متطلبات متسلسلة
-  - استخدم **النقاط** (•) عند سرد عناصر غير مرتبة
-  - استخدم **العناوين الفرعية** لتقسيم الإجابات الطويلة
-  - استخدم **التنسيق الغامق** للمصطلحات المهمة
-- حافظ على هيكل المادة/البند كما ورد في الأصل
-- ابدأ بملخص مختصر ثم التفاصيل
-
-### 6. صيغة الاقتباس المطلوبة:
-```
-📌 [اسم المستند] - المادة X:
-«نص الاقتباس المباشر من المستند»
-```
-
-### 7. هيكل الإجابة المثالي:
-```
-**الملخص:** [جملة أو جملتان تلخص الإجابة]
-
-**التفاصيل:**
-1. [النقطة الأولى مع الاقتباس]
-2. [النقطة الثانية مع الاقتباس]
-
-**المصادر:**
-- [اسم المستند والمادة]
-```
-
-أنت تمثل نظام معلومات رسمي للهيئة. الدقة والموثوقية أهم من الشمولية."""
-
-    SYSTEM_PROMPT_EN = """You are a legal assistant specialized in Egyptian Financial Regulatory Authority (FRA) regulations and decisions.
-
-## Strict Response Rules:
-
-### 1. Source-Based Only (Mandatory):
-- Answer **ONLY** based on information in the provided context
-- **Never fabricate** or assume information not explicitly in the texts
-
-### 2. Precise Citations (Mandatory):
-For every piece of information, include:
-- **Regulation/Decision name** (if available)
-- **Article number** (e.g., Article 5, Clause 2)
-- **Direct quote** in quotation marks "..."
-
-### 3. Handling Missing Information (Mandatory):
-If no explicit answer exists:
-- State clearly: "**No explicit text in the available documents** directly answers this question."
-- If related articles exist, mention them: "However, the following may be relevant: ..."
-- **Never provide unsupported conclusions**
-
-### 4. Multi-Source Reasoning:
-- When answer requires multiple documents, combine them citing each source
-- Clarify relationships between different sources
-
-### 5. Response Formatting (Very Important):
-- **Organize responses clearly and readably:**
-  - Use **numbered lists** (1. 2. 3.) for sequential steps or requirements
-  - Use **bullet points** (•) for unordered items
-  - Use **subheadings** to divide long answers
-  - Use **bold formatting** for important terms
-- Preserve original article/clause structure
-- Start with a brief summary, then details
-
-### 6. Citation Format:
-```
-📌 [Document Name] - Article X:
-"Direct quote from the document"
-```
-
-### 7. Ideal Response Structure:
-```
-**Summary:** [One or two sentences summarizing the answer]
-
-**Details:**
-1. [First point with citation]
-2. [Second point with citation]
-
-**Sources:**
-- [Document name and article]
-```
-
-You represent an official FRA information system. Accuracy and reliability are more important than comprehensiveness."""
+<format>
+[Direct answer]
+[Source: Document name - Article X]
+</format>"""
 
     def __init__(
         self,
         api_key: Optional[str] = None,
         model: str = GROK_MODEL,
         endpoint: str = XAI_API_ENDPOINT,
-        temperature: float = 0.1,
+        temperature: float = 0.0,
         max_tokens: int = 2000,
         use_arabic_prompt: bool = True,
     ):
@@ -206,6 +127,104 @@ You represent an official FRA information system. Accuracy and reliability are m
         }
         
         logger.info(f"GrokClient initialized with model: {model}")
+    
+    def filter_relevant_chunks(
+        self,
+        query: str,
+        chunks: List[Dict[str, Any]],
+        min_chunks: int = 1,
+    ) -> List[Dict[str, Any]]:
+        """
+        Filter chunks to keep only those relevant to the query.
+        Uses LLM to identify which chunks contain the answer.
+        
+        Args:
+            query: User's question
+            chunks: List of retrieved chunks with 'content' and 'source' keys
+            min_chunks: Minimum number of chunks to keep (prevents over-filtering)
+            
+        Returns:
+            Filtered list of relevant chunks
+        """
+        if not chunks:
+            return []
+        
+        # Don't filter if only 1-2 chunks
+        if len(chunks) <= 2:
+            return chunks
+        
+        # Build chunk list for LLM
+        chunk_descriptions = []
+        for i, chunk in enumerate(chunks):
+            content = chunk.get("content", chunk.get("text", ""))[:400]  # Truncate for efficiency
+            source = chunk.get("source", "unknown")
+            chunk_descriptions.append(f"[{i}] Source: {source}\n{content}")
+        
+        chunks_text = "\n\n".join(chunk_descriptions)
+        
+        filter_prompt = f"""<task>Rate each chunk's relevance to answering the query.</task>
+
+<query>{query}</query>
+
+<chunks>
+{chunks_text}
+</chunks>
+
+<instruction>
+Return chunk numbers that MAY contain useful information for answering.
+Be INCLUSIVE - include chunks that are even partially relevant.
+Format: comma-separated numbers (e.g., "0,1,2")
+Include at least the top 1-2 most relevant chunks.
+</instruction>"""
+
+        payload = {
+            "model": self.model,
+            "messages": [
+                {"role": "user", "content": filter_prompt},
+            ],
+            "temperature": 0.0,
+            "max_tokens": 50,
+        }
+        
+        try:
+            response = requests.post(
+                self.endpoint,
+                headers=self.headers,
+                json=payload,
+                timeout=30,
+            )
+            response.raise_for_status()
+            result = response.json()
+            answer = result["choices"][0]["message"]["content"].strip()
+            
+            logger.info(f"Context filter response: {answer}")
+            
+            # Parse chunk indices
+            try:
+                # Extract all numbers from response
+                import re
+                indices = [int(x) for x in re.findall(r'\d+', answer)]
+                indices = list(dict.fromkeys(indices))  # Remove duplicates, preserve order
+                filtered = [chunks[i] for i in indices if 0 <= i < len(chunks)]
+                
+                # Ensure minimum chunks
+                if len(filtered) < min_chunks:
+                    # Add back highest-scored chunks
+                    for chunk in chunks:
+                        if chunk not in filtered:
+                            filtered.append(chunk)
+                        if len(filtered) >= min_chunks:
+                            break
+                
+                logger.info(f"Filtered {len(chunks)} chunks to {len(filtered)} relevant chunks")
+                return filtered if filtered else chunks
+            except (ValueError, IndexError) as e:
+                logger.warning(f"Failed to parse filter response: {e}, using all chunks")
+                return chunks
+                
+        except Exception as e:
+            logger.warning(f"Context filter failed: {e}, using all chunks")
+            return chunks
     
     def generate(
         self,

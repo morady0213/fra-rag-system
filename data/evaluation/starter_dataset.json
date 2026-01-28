@@ -1,0 +1,279 @@
+{
+  "name": "fra_starter",
+  "version": "1.0",
+  "created_at": "2026-01-18T12:00:29.647181",
+  "items": [
+    {
+      "id": "3a4e674c-1f73-4760-ba68-ecc72238665e",
+      "question": "ما هو الحد الأدنى لرأس المال لشركة تمويل استهلاكي؟",
+      "question_type": "factual",
+      "language": "ar",
+      "ground_truth_answer": "الحد الأدنى لرأس المال المدفوع لشركة التمويل الاستهلاكي هو 50 مليون جنيه مصري. يجب على الشركة استيفاء هذا الحد كشرط أساسي للحصول على ترخيص مزاولة النشاط.",
+      "relevant_chunks": [],
+      "relevant_docs": ["نموذج-قيد-فرع-لشركة-تمويل-الاستهلاكى.docx", "الموافقة-على-تأسيس-تمويل-استهلاكى.docx"],
+      "ground_truth_articles": [],
+      "difficulty": "easy",
+      "requires_multi_hop": false,
+      "entity_type": "تمويل_استهلاكي",
+      "topic": "رأس_المال",
+      "metadata": {}
+    },
+    {
+      "id": "20407660-d48e-4700-83c7-70f255944a4a",
+      "question": "ما هي المستندات المطلوبة لإصدار سندات التوريق؟",
+      "question_type": "factual",
+      "language": "ar",
+      "ground_truth_answer": "تشمل المستندات المطلوبة لإصدار سندات التوريق: نشرة الاكتتاب، تقرير مدير الإصدار، تقييم الضمانات، تقرير مراقب الحسابات، العقود والاتفاقيات، وموافقة الهيئة العامة للرقابة المالية.",
+      "relevant_chunks": [],
+      "relevant_docs": ["مستندات-اصدار-برنامج-سندات-توريق.docx", "مستندات-اصدار-مستقل-لسندات-توريق.docx"],
+      "ground_truth_articles": [],
+      "difficulty": "medium",
+      "requires_multi_hop": false,
+      "entity_type": "توريق",
+      "topic": "سندات",
+      "metadata": {}
+    },
+    {
+      "id": "caf54038-d2b6-418b-bd5d-26e46a4c5f0e",
+      "question": "ما هي إجراءات غلق فرع لشركة سمسرة؟",
+      "question_type": "factual",
+      "language": "ar",
+      "ground_truth_answer": "يجب تقديم طلب غلق الفرع للهيئة العامة للرقابة المالية مرفقاً به: موافقة مجلس الإدارة، خطة نقل العملاء والحسابات، تسوية جميع الالتزامات القائمة، وإخطار العملاء.",
+      "relevant_chunks": [],
+      "relevant_docs": ["نموذج-غلق-فرع-لشركة-سمسرة.docx"],
+      "ground_truth_articles": [],
+      "difficulty": "medium",
+      "requires_multi_hop": false,
+      "entity_type": "سمسرة",
+      "topic": "غلق",
+      "metadata": {}
+    },
+    {
+      "id": "78de7e0f-2e86-4cc1-b7b0-a15f351b3d7d",
+      "question": "ما الفرق بين متطلبات قيد فرع تمويل استهلاكي وفرع تمويل متناهي الصغر؟",
+      "question_type": "comparison",
+      "language": "ar",
+      "ground_truth_answer": "يختلف الحد الأدنى لرأس المال والمستندات المطلوبة بين النوعين.",
+      "relevant_chunks": [],
+      "relevant_docs": [],
+      "ground_truth_articles": [],
+      "difficulty": "hard",
+      "requires_multi_hop": true,
+      "entity_type": "",
+      "topic": "",
+      "metadata": {}
+    },
+    {
+      "id": "cd341c9f-bc92-4bdc-b76b-64cf8b71cfce",
+      "question": "هل يجوز لشركة التأمين فتح فرع جديد بدون موافقة الهيئة؟",
+      "question_type": "conditional",
+      "language": "ar",
+      "ground_truth_answer": "لا، يجب الحصول على موافقة الهيئة العامة للرقابة المالية قبل فتح أي فرع جديد.",
+      "relevant_chunks": [],
+      "relevant_docs": [],
+      "ground_truth_articles": [],
+      "difficulty": "medium",
+      "requires_multi_hop": false,
+      "entity_type": "تأمين",
+      "topic": "فروع",
+      "metadata": {}
+    },
+    {
+      "id": "996dab49-fd34-4a2a-bf1b-1e16b99ab3f9",
+      "question": "ما هي عقوبة تجاوز سرعة 120 كم/ساعة؟",
+      "question_type": "edge_case",
+      "language": "ar",
+      "ground_truth_answer": "لا توجد معلومات في المستندات المتاحة حول هذا الموضوع.",
+      "relevant_chunks": [],
+      "relevant_docs": [],
+      "ground_truth_articles": [],
+      "difficulty": "hard",
+      "requires_multi_hop": false,
+      "entity_type": "",
+      "topic": "",
+      "metadata": {}
+    },
+    {
+      "id": "0aeac20e-b298-4c74-8ebf-4dd4bd876336",
+      "question": "ما هي متطلبات إصدار السندات الخضراء؟",
+      "question_type": "factual",
+      "language": "ar",
+      "ground_truth_answer": "تشمل متطلبات إصدار السندات الخضراء تقديم خطة استخدام العوائد، تقرير التأثير البيئي، وشهادة التحقق من طرف ثالث.",
+      "relevant_chunks": [],
+      "relevant_docs": [
+        "مستندات-اصدار-سندات-خضراء.docx"
+      ],
+      "ground_truth_articles": [],
+      "difficulty": "medium",
+      "requires_multi_hop": false,
+      "entity_type": "توريق",
+      "topic": "سندات",
+      "metadata": {}
+    },
+    {
+      "id": "d05a7307-e50c-4b36-9b97-76f11eb32f13",
+      "question": "ما هي المستندات المطلوبة لتسجيل شركة تأمين أشخاص؟",
+      "question_type": "factual",
+      "language": "ar",
+      "ground_truth_answer": "تشمل المستندات: عقد التأسيس، السجل التجاري، قائمة المساهمين، والموقف المالي.",
+      "relevant_chunks": [],
+      "relevant_docs": [
+        "نموذج-تسجيل-شركات-تأمين-اشخاص.docx"
+      ],
+      "ground_truth_articles": [],
+      "difficulty": "medium",
+      "requires_multi_hop": false,
+      "entity_type": "تأمين",
+      "topic": "تسجيل",
+      "metadata": {}
+    },
+    {
+      "id": "84afbba7-e144-4ff7-a60c-709299b481b8",
+      "question": "ما هي إجراءات نقل فرع لشركة سمسرة؟",
+      "question_type": "procedural",
+      "language": "ar",
+      "ground_truth_answer": "يجب تقديم طلب النقل مع تحديد الموقع الجديد وموافقة مجلس الإدارة وإخطار العملاء.",
+      "relevant_chunks": [],
+      "relevant_docs": [
+        "نموذج-نقل-فرع-لشركة-سمسرة.docx"
+      ],
+      "ground_truth_articles": [],
+      "difficulty": "medium",
+      "requires_multi_hop": false,
+      "entity_type": "سمسرة",
+      "topic": "نقل",
+      "metadata": {}
+    },
+    {
+      "id": "b8a79fc0-3236-4e94-b71a-07ce8c18a134",
+      "question": "ما هي خطوات قيد فرع لشركة تمويل متناهي الصغر؟",
+      "question_type": "procedural",
+      "language": "ar",
+      "ground_truth_answer": "تشمل الخطوات: تقديم الطلب، إرفاق المستندات المطلوبة، الفحص الأمني، وصدور قرار القيد.",
+      "relevant_chunks": [],
+      "relevant_docs": [
+        "نموذج-قيد-فروع-متناهى-الصغر.docx"
+      ],
+      "ground_truth_articles": [],
+      "difficulty": "medium",
+      "requires_multi_hop": true,
+      "entity_type": "تمويل_متناهي_الصغر",
+      "topic": "ترخيص",
+      "metadata": {}
+    },
+    {
+      "id": "924c9c95-bd39-4674-b13d-6db4ff79514a",
+      "question": "ما الفرق بين إجراءات غلق فرع شركة تمويل استهلاكي وشركة تأجير تمويلي؟",
+      "question_type": "comparison",
+      "language": "ar",
+      "ground_truth_answer": "تتشابه الإجراءات في المتطلبات الأساسية مع اختلافات في المستندات المطلوبة حسب طبيعة النشاط.",
+      "relevant_chunks": [],
+      "relevant_docs": [
+        "نموذج-غلق-فرع-لشركة-تمويل-استهلاكى.docx",
+        "نموذج-غلق-فرع-لشركة-التاجير-التمويلى.docx"
+      ],
+      "ground_truth_articles": [],
+      "difficulty": "hard",
+      "requires_multi_hop": true,
+      "entity_type": "",
+      "topic": "",
+      "metadata": {}
+    },
+    {
+      "id": "ae87ae39-60ad-432c-903d-55bc17eea846",
+      "question": "هل يمكن تغيير مدير الفرع بدون موافقة الهيئة؟",
+      "question_type": "conditional",
+      "language": "ar",
+      "ground_truth_answer": "لا، يجب الحصول على موافقة الهيئة العامة للرقابة المالية قبل تغيير مدير الفرع.",
+      "relevant_chunks": [],
+      "relevant_docs": [
+        "نموذج-تغيير-مدير-الفرع.docx"
+      ],
+      "ground_truth_articles": [],
+      "difficulty": "medium",
+      "requires_multi_hop": false,
+      "entity_type": "",
+      "topic": "مدير",
+      "metadata": {}
+    },
+    {
+      "id": "430b18f3-8aca-42de-931f-a08084d81292",
+      "question": "ما هي جميع أنواع السندات التي يمكن إصدارها؟",
+      "question_type": "aggregation",
+      "language": "ar",
+      "ground_truth_answer": "تشمل أنواع السندات: سندات التوريق، سندات الشركات، والسندات الخضراء.",
+      "relevant_chunks": [],
+      "relevant_docs": [
+        "مستندات-اصدار-برنامج-سندات-توريق.docx",
+        "مستندات-اصدار-برنامج-سندات-شركات.docx",
+        "مستندات-اصدار-سندات-خضراء.docx"
+      ],
+      "ground_truth_articles": [],
+      "difficulty": "hard",
+      "requires_multi_hop": true,
+      "entity_type": "توريق",
+      "topic": "سندات",
+      "metadata": {}
+    },
+    {
+      "id": "f208b994-2aed-423e-a1e6-a186fe11b26f",
+      "question": "ما هي عقوبة التأخر في سداد الضرائب؟",
+      "question_type": "edge_case",
+      "language": "ar",
+      "ground_truth_answer": "لا توجد معلومات في المستندات المتاحة حول هذا الموضوع. هذا السؤال خارج نطاق اللوائح المتاحة.",
+      "relevant_chunks": [],
+      "relevant_docs": [],
+      "ground_truth_articles": [],
+      "difficulty": "hard",
+      "requires_multi_hop": false,
+      "entity_type": "",
+      "topic": "",
+      "metadata": {}
+    },
+    {
+      "id": "b810a98b-57d6-4be3-bfed-8898316b905f",
+      "question": "هل تحتاج شركة تمويل استهلاكي جديدة برأس مال 40 مليون جنيه إلى استثناء خاص؟",
+      "question_type": "conditional",
+      "language": "ar",
+      "ground_truth_answer": "نعم، لأن الحد الأدنى لرأس المال هو 50 مليون جنيه، وبالتالي الشركة برأس مال 40 مليون لا تستوفي المتطلبات.",
+      "relevant_chunks": [],
+      "relevant_docs": [],
+      "ground_truth_articles": [
+        "5"
+      ],
+      "difficulty": "hard",
+      "requires_multi_hop": true,
+      "entity_type": "تمويل_استهلاكي",
+      "topic": "رأس_المال",
+      "metadata": {}
+    }
+  ],
+  "metadata": {},
+  "statistics": {
+    "total_items": 15,
+    "by_type": {
+      "edge_case": 2,
+      "factual": 5,
+      "comparison": 2,
+      "conditional": 3,
+      "aggregation": 1,
+      "procedural": 2
+    },
+    "by_difficulty": {
+      "easy": 1,
+      "hard": 6,
+      "medium": 8
+    },
+    "by_entity": {
+      "تأمين": 2,
+      "سمسرة": 2,
+      "تمويل_استهلاكي": 2,
+      "تمويل_متناهي_الصغر": 1,
+      "توريق": 3
+    },
+    "multi_hop_count": 5,
+    "languages": [
+      "ar"
+    ]
+  }
+}

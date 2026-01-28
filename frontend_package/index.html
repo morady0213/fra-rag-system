@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام FRA للذكاء الاصطناعي</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">🏛️</span>
+                    <div class="logo-text">
+                        <h1>نظام FRA للذكاء الاصطناعي</h1>
+                        <p>الهيئة العامة للرقابة المالية</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button id="themeToggle" class="icon-btn" title="تغيير المظهر">🌙</button>
+                    <button id="statsBtn" class="icon-btn" title="الإحصائيات">📊</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <h3>⚙️ إعدادات البحث</h3>
+                    
+                    <div class="form-group">
+                        <label for="language">اللغة</label>
+                        <select id="language">
+                            <option value="ar" selected>العربية</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="numSources">عدد المصادر: <span id="numSourcesValue">5</span></label>
+                        <input type="range" id="numSources" min="1" max="10" value="5">
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <label>
+                            <input type="checkbox" id="hybridSearch" checked>
+                            <span>البحث الهجين</span>
+                        </label>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <label>
+                            <input type="checkbox" id="reranking" checked>
+                            <span>إعادة الترتيب</span>
+                        </label>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <label>
+                            <input type="checkbox" id="reactAgent">
+                            <span>وكيل ReAct</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>🔍 فلاتر البحث</h3>
+                    
+                    <div class="form-group">
+                        <label for="entityFilter">نوع الجهة</label>
+                        <select id="entityFilter">
+                            <option value="all">الكل</option>
+                            <option value="insurance">التأمين</option>
+                            <option value="capital_market">سوق المال</option>
+                            <option value="mortgage">التمويل العقاري</option>
+                            <option value="leasing">التأجير التمويلي</option>
+                            <option value="factoring">التخصيم</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="docTypeFilter">نوع المستند</label>
+                        <select id="docTypeFilter">
+                            <option value="all">الكل</option>
+                            <option value="law">قانون</option>
+                            <option value="regulation">لائحة</option>
+                            <option value="decision">قرار</option>
+                            <option value="circular">منشور</option>
+                            <option value="form">نموذج</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="topicFilter">الموضوع</label>
+                        <select id="topicFilter">
+                            <option value="all">الكل</option>
+                            <option value="licensing">الترخيص</option>
+                            <option value="governance">الحوكمة</option>
+                            <option value="disclosure">الإفصاح</option>
+                            <option value="capital">رأس المال</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>📁 رفع المستندات</h3>
+                    <div class="upload-area" id="uploadArea">
+                        <input type="file" id="fileInput" multiple accept=".pdf,.docx,.txt" hidden>
+                        <div class="upload-content">
+                            <span class="upload-icon">📤</span>
+                            <p>اسحب الملفات هنا أو انقر للرفع</p>
+                            <small>PDF, DOCX, TXT</small>
+                        </div>
+                    </div>
+                    <div id="uploadStatus" class="upload-status"></div>
+                </div>
+
+                <div class="sidebar-section">
+                    <button id="browseChunksBtn" class="secondary-btn">
+                        🗃️ استعراض الأجزاء
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Chat Area -->
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Welcome Message -->
+                    <div class="message bot-message">
+                        <div class="message-avatar">🤖</div>
+                        <div class="message-content">
+                            <p>مرحباً! أنا مساعدك القانوني للهيئة العامة للرقابة المالية. كيف يمكنني مساعدتك اليوم؟</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sources Panel -->
+                <div class="sources-panel" id="sourcesPanel">
+                    <div class="sources-header">
+                        <h3>📚 المصادر</h3>
+                        <button id="closeSourcesBtn" class="close-btn">✕</button>
+                    </div>
+                    <div class="sources-content" id="sourcesContent">
+                        <!-- Sources will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div class="chat-input-container">
+                    <div class="chat-input-wrapper">
+                        <textarea 
+                            id="userInput" 
+                            placeholder="اكتب سؤالك هنا..."
+                            rows="1"
+                        ></textarea>
+                        <button id="sendBtn" class="send-btn" title="إرسال">
+                            <span>➤</span>
+                        </button>
+                    </div>
+                    <div class="input-hints">
+                        <span>اضغط Enter للإرسال</span>
+                        <button id="showSourcesBtn" class="hint-btn">عرض المصادر</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Stats Modal -->
+        <div class="modal" id="statsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>📊 إحصائيات النظام</h2>
+                    <button class="close-btn" id="closeStatsModal">✕</button>
+                </div>
+                <div class="modal-body" id="statsContent">
+                    <!-- Stats will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Chunks Modal -->
+        <div class="modal" id="chunksModal">
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <h2>🗃️ استعراض الأجزاء المخزنة</h2>
+                    <button class="close-btn" id="closeChunksModal">✕</button>
+                </div>
+                <div class="modal-body" id="chunksContent">
+                    <!-- Chunks will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-spinner"></div>
+            <p>جاري المعالجة...</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

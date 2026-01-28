@@ -76,10 +76,13 @@ def format_arabic(text: str) -> str:
 from ingestion.ocr_processor import PDFProcessor
 from ingestion.chunking import ArabicTextChunker
 from ingestion.arabic_utils import normalize_text
+from ingestion.metadata_extractor import MetadataExtractor, create_metadata_extractor
+from ingestion.hierarchical_chunker import HierarchicalChunker, create_hierarchical_chunker, ParentDocumentRetriever
 from rag_engine.vector_store import VectorStore
 from rag_engine.retriever import Retriever
 from rag_engine.hybrid_retriever import HybridRetriever, ResponseCache
 from rag_engine.query_router import QueryRouter, create_query_router
+from rag_engine.react_agent import ReActAgent, create_react_agent
 from llm_client.grok_client import GrokClient
 
 
@@ -131,6 +134,19 @@ class FRARAGSystem:
         self.chunker = ArabicTextChunker()
         self.pdf_processor = PDFProcessor()
         
+        # Initialize metadata extractor (semantic metadata for filtering)
+        self.metadata_extractor = create_metadata_extractor(use_llm=False)
+        
+        # Initialize hierarchical chunker (parent-document retrieval)
+        self.hierarchical_chunker = create_hierarchical_chunker(
+            min_chunk_size=100,
+            max_chunk_size=500,
+            index_level="clause",
+        )
+        
+        # Store for hierarchical documents
+        self.hierarchical_docs = {}
+        
         # Initialize hybrid retriever (enhanced retrieval)
         self.hybrid_retriever = HybridRetriever(
             vector_store=self.vector_store,
@@ -147,6 +163,17 @@ class FRARAGSystem:
         # Initialize LLM client (may fail if no API key)
         self.llm_client = None
         self._init_llm_client()
+        
+        # Initialize ReAct agent for multi-hop reasoning (after LLM client)
+        self.react_agent = None
+        if self.llm_client:
+            self.react_agent = create_react_agent(
+                retriever=self.hybrid_retriever,
+                llm_client=self.llm_client,
+                max_iterations=5,
+                language="ar",
+            )
+            logger.info("ReAct agent initialized for multi-hop reasoning")
         
         logger.info(f"FRA RAG System initialized (hybrid={use_hybrid}, rerank={use_reranker}, cache={use_cache})")
     
@@ -286,6 +313,9 @@ class FRARAGSystem:
                     logger.warning(f"No text extracted from: {filepath.name}")
                     continue
                 
+                # Extract semantic metadata
+                doc_metadata = self.metadata_extractor.extract(content, filepath.name)
+                
                 # Chunk the document
                 chunked = self.chunker.chunk_text(
                     text=content,
@@ -293,6 +323,13 @@ class FRARAGSystem:
                     metadata={
                         "type": "docx",
                         "path": str(filepath),
+                        "document_type": doc_metadata.document_type,
+                        "entity_types": doc_metadata.entity_types,
+                        "topics": doc_metadata.topics,
+                        "has_penalties": doc_metadata.has_penalties,
+                        "has_capital_requirements": doc_metadata.has_capital_requirements,
+                        "has_licensing_requirements": doc_metadata.has_licensing_requirements,
+                        "has_branch_requirements": doc_metadata.has_branch_requirements,
                     },
                 )
                 
